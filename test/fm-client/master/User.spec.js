@@ -24,7 +24,14 @@ describe('User', function () {
   })
 
   it('create', async function () {
-    const response = await c.create()
+    const response = await c.create({
+      code: "test",
+      password: "test",
+      group: "111",
+      menu: "00",
+      name: "test",
+      supplierCodes: ["0002", "0004"]
+    })
     expect(response).be.true
   });
 })
