@@ -52,8 +52,7 @@ module.exports = class FmClient extends Promiseable {
   signIn(user) {
     this.enqueue(async () => {
       const auth = new Auth(this.page)
-      await auth.signIn(user)
-      return true
+      return await auth.signIn(user)
     }, [user])
     return this
   }

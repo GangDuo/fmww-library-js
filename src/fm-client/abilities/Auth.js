@@ -17,12 +17,17 @@ module.exports = class Auth extends AbstractSinglePage {
     }
 
     await page.waitForSelector('#form1\\:client')
-    await Promise.all([
+    const isSuccess = await Promise.all([
       page.evaluate(Native.signIn, user_),
       page.waitForNavigation({timeout: 60000, waitUntil: 'domcontentloaded'})
-    ])
-    debug.log('signined')
+    ]).then(_ => {
+      debug.log('signined');
+      return true;
+    }).catch(e => {
+      console.error(e);
+      return false;
+    })
     await page.screenshotIfDebug({ path: 'signined.png' });
-    return Promise.resolve(true)
+    return Promise.resolve(isSuccess)
   }
 }

@@ -32,6 +32,18 @@ describe('FmClient', function () {
     expect(response.statusText().toUpperCase()).to.equal('OK')
   });
 
+  it('signIn failure', async function () {
+    this.timeout(100000);
+    const response = await client
+      .signIn({
+        FMWW_ACCESS_KEY_ID     : "",
+        FMWW_USER_NAME         : "",
+        FMWW_SECRET_ACCESS_KEY : "",
+        FMWW_PASSWORD          : ""
+      })
+    expect(response).be.false
+  });
+
   it('signIn', async function () {
     const response = await client.signIn(user)
     expect(response).be.true
