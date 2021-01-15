@@ -21,8 +21,17 @@ module.exports = class Schedule extends AbstractSinglePage {
   }
 
   async create(options) {
-    await super.clickOnMenu(MENU_ITEM, EXECUTION_BUTTON)
-    return await this.applyInventory_(options)
+    try {
+      await super.clickOnMenu(MENU_ITEM, EXECUTION_BUTTON).catch(error => {
+        throw error
+      })
+      return await this.applyInventory_(options)
+    } catch(e) {
+      return {
+        isSuccess: false,
+        statusText: e.message//'原因不明のエラー',
+      }
+    }
   }
 
   async applyInventory_(options) {

@@ -44,6 +44,9 @@ module.exports = class AbstractSinglePage {
 
   async clickOnMenu(menuItem, button) {
     await this.decideMenuItem_(new MenuContext(menuItem, button))
+    .catch(e => {
+      throw e
+    })
   }
 
   async backToMainMenu() {
@@ -83,25 +86,30 @@ module.exports = class AbstractSinglePage {
     const subcatergory = context.subcatergory
     const command = context.command
     const action = context.action
-  
+
     // 外部インターフェース -> 対HT -> 商品マスタメンテナンス -> 照会
-    await page.waitForSelector('#menu\\:0 div:nth-child(' + catergory + ')')
-    await page.evaluate((catergory, subcatergory) => {
-      document.querySelector('#menu\\:0 div:nth-child(' + catergory + ')').click()
-      document.querySelector('#menu\\:1 div:nth-child(' + subcatergory + ')').click()
-    }, catergory, subcatergory),
-    await page.waitForSelector('#menu\\:2 div:nth-child(' + command + ') div:nth-child(' + action + ')')
-    debug.log('menu')
-    await page.screenshotIfDebug({ path: 'menu.png' });
-  
-    await Promise.all([
-      page.evaluate((command, action) => {
-        document.querySelector('#menu\\:2 div:nth-child(' + command + ') div:nth-child(' + action + ')').click()
-      }, command, action),
-      page.waitForNavigation({timeout: 60000, waitUntil: 'domcontentloaded'})
-    ])
-    await this.waitUntilLoadingIsOver()
-    debug.log('criteria')
-    await page.screenshotIfDebug({ path: 'criteria.png' });
-  }  
+    try {
+      await page.waitForSelector('#menu\\:0 div:nth-child(' + catergory + ')')
+      await page.evaluate((catergory, subcatergory) => {
+        document.querySelector('#menu\\:0 div:nth-child(' + catergory + ')').click()
+        document.querySelector('#menu\\:1 div:nth-child(' + subcatergory + ')').click()
+      }, catergory, subcatergory),
+      await page.waitForSelector('#menu\\:2 div:nth-child(' + command + ') div:nth-child(' + action + ')')
+      debug.log('menu')
+      await page.screenshotIfDebug({ path: 'menu.png' });
+
+      await Promise.all([
+        page.evaluate((command, action) => {
+          document.querySelector('#menu\\:2 div:nth-child(' + command + ') div:nth-child(' + action + ')').click()
+        }, command, action),
+        page.waitForNavigation({timeout: 60000, waitUntil: 'domcontentloaded'})
+      ])
+      await this.waitUntilLoadingIsOver()
+      debug.log('criteria')
+      await page.screenshotIfDebug({ path: 'criteria.png' });
+    } catch(e) {
+      console.error(e)
+      throw e
+    }
+  }
 }
