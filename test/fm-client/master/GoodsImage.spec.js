@@ -38,8 +38,14 @@ describe('GoodsImage', function () {
     expect(true).to.be.true;
   });
 
-  it('export', function () {
-    c.export()
+  it('export', async function () {
+    const xs = ['00015345', '00081643', '00081637']
+    for (const x of xs) {
+      await c.export({
+        baseURL: process.env.FMWW_SIGN_IN_URL,
+        modelNumber: x
+      })
+    }
     expect(true).to.be.true;
   });
 })

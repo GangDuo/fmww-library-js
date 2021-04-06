@@ -1,3 +1,4 @@
+const fs = require('fs').promises;
 const AbstractSinglePage = require('../../../components/AbstractSinglePage')
 const debug = require('../../../../diagnostics/debug')
 
@@ -26,7 +27,19 @@ module.exports = class GoodsImage extends AbstractSinglePage {
     debug.log('GoodsImage.delete')
   }
 
-  export(options) {
+  async export({ baseURL, modelNumber }) {
     debug.log('GoodsImage.export')
+
+    const page = super.page
+    const imageURL = new URL(`/JMODE_ASP/faces/contents/imageServlet?dir=system&id=0&style=${modelNumber}`, baseURL);
+
+    try {
+      const viewSource = await page.goto(imageURL.toString());
+      const content = await viewSource.buffer()
+
+      await fs.writeFile(`${modelNumber}.jpg`, content)
+    } catch (error) {
+      throw error
+    }
   }
 }
