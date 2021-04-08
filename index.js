@@ -9,12 +9,7 @@ const InventoryAsBatch = require('./src/fm-client/abilities/external-interface/I
 const Between = require('./src/fm-client/components/Between')
 const GoodsImage = require('./src/fm-client/abilities/master/goods-image/')
 
-const echoTest = () => {
-  console.log("Hello, World!")
-};
-
 module.exports = {
-  echoTest,
   FmClient,
   ProductMaintenance,
   Points,
