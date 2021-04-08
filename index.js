@@ -7,6 +7,7 @@ const Supplier = require('./src/fm-client/abilities/master/Supplier')
 const MovementExport = require('./src/fm-client/abilities/movement/MovementExport')
 const InventoryAsBatch = require('./src/fm-client/abilities/external-interface/InventoryAsBatch')
 const Between = require('./src/fm-client/components/Between')
+const GoodsImage = require('./src/fm-client/abilities/master/goods-image/')
 
 const echoTest = () => {
   console.log("Hello, World!")
@@ -22,5 +23,6 @@ module.exports = {
   Supplier,
   MovementExport,
   InventoryAsBatch,
-  Between
+  Between,
+  GoodsImage
 };
