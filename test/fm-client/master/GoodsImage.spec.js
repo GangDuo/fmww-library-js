@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const FmClient = require('../../../src/fm-client/FmClient');
 const GoodsImage = require('../../../src/fm-client/abilities/master/goods-image/');
 
@@ -41,11 +43,20 @@ describe('GoodsImage', function () {
   it('export', async function () {
     const xs = ['00015345', '00081643', '00081637']
     for (const x of xs) {
+      const path = `${x}.jpg`
+      try {
+        if(fs.existsSync(path)) {
+          await fs.promises.unlink(path)
+        }
+      } catch (error) {
+        throw error
+      }
+
       await c.export({
         baseURL: process.env.FMWW_SIGN_IN_URL,
         modelNumber: x
       })
+      expect(fs.existsSync(path)).to.be.true;
     }
-    expect(true).to.be.true;
   });
 })
