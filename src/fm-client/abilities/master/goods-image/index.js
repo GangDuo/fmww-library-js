@@ -27,17 +27,24 @@ module.exports = class GoodsImage extends AbstractSinglePage {
     debug.log('GoodsImage.delete')
   }
 
-  async export({ baseURL, modelNumber }) {
+  async export({ baseURL, modelNumber, ...options }) {
     debug.log('GoodsImage.export')
 
     const page = super.page
+    const destination = [(options.destination || '').replace(/\/+$/, '')].map(x => x.length > 0 ? x.concat('/') : x).pop()
+    if(destination.length > 0) {
+      await fs.mkdir(destination, {
+        recursive: true
+      })
+      .catch(e => console.error(e))
+    }
     const imageURL = new URL(`/JMODE_ASP/faces/contents/imageServlet?dir=system&id=0&style=${modelNumber}`, baseURL);
 
     try {
       const viewSource = await page.goto(imageURL.toString());
       const content = await viewSource.buffer()
 
-      await fs.writeFile(`${modelNumber}.jpg`, content)
+      await fs.writeFile(`${destination}${modelNumber}.jpg`, content)
     } catch (error) {
       throw error
     }

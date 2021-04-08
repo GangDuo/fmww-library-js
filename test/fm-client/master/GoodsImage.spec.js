@@ -40,23 +40,43 @@ describe('GoodsImage', function () {
     expect(true).to.be.true;
   });
 
-  it('export', async function () {
+  describe('export', function () {
+    const destination = "images/00/"
     const xs = ['00015345', '00081643', '00081637']
-    for (const x of xs) {
-      const path = `${x}.jpg`
-      try {
-        if(fs.existsSync(path)) {
-          await fs.promises.unlink(path)
-        }
-      } catch (error) {
-        throw error
-      }
 
-      await c.export({
-        baseURL: process.env.FMWW_SIGN_IN_URL,
-        modelNumber: x
-      })
-      expect(fs.existsSync(path)).to.be.true;
-    }
-  });
+    before(async function() {
+      const dust = ['', destination].flatMap(prefix => xs.map(modelNumber => `${prefix}${modelNumber}`))
+      for (const x of dust) {
+        const path = `${x}.jpg`
+        try {
+          if(fs.existsSync(path)) {
+            await fs.promises.unlink(path)
+          }
+        } catch (error) {
+          throw error
+        }
+      }
+    })
+
+    it('save to current directory', async function () {
+      for (const x of xs) {
+        await c.export({
+          baseURL: process.env.FMWW_SIGN_IN_URL,
+          modelNumber: x
+        })
+        expect(fs.existsSync(`${x}.jpg`)).to.be.true;
+      }
+    });
+
+    it('save to any directory', async function () {
+      for (const x of xs) {
+        await c.export({
+          baseURL: process.env.FMWW_SIGN_IN_URL,
+          modelNumber: x,
+          destination
+        })
+        expect(fs.existsSync(`${destination}${x}.jpg`)).to.be.true;
+      }
+    });
+  })
 })
