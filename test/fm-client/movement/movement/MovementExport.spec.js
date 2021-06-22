@@ -59,5 +59,15 @@ describe('FmClient', function () {
       })
       expect(response).be.true
     });
+
+    it('export with range', async function () {
+      const response = await c.export({
+        filename: 'movement2.csv',
+        senders: ['005', '006', '007'],
+        receivers: ['9998'],
+        between: new Between('2021-06-01', '2099-12-31')
+      })
+      expect(response).be.true
+    });
   });
 });

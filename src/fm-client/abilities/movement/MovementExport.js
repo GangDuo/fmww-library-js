@@ -75,7 +75,14 @@ module.exports = class MovementExport extends AbstractSinglePage {
 
   async exportMovement_(options) {
     const page = super.page
+    const senders = options.senders || []
+    const receivers = options.receivers || []
+    const multipleSelector = () => {
+      return (id, xs) => document.getElementById(id).value = xs.join('\t')
+    }
 
+    await page.evaluate(multipleSelector(), 'destFrom:dest', senders)
+    await page.evaluate(multipleSelector(), 'destTo:dest', receivers)
     await page.evaluate(Native.performClick(), ButtonSymbol.CSV)
     await super.waitUntilLoadingIsOver()
   
