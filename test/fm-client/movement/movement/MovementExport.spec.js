@@ -63,9 +63,9 @@ describe('FmClient', function () {
     it('export with range', async function () {
       const response = await c.export({
         filename: 'movement2.csv',
-        senders: ['005', '006', '007'],
-        receivers: ['9998'],
-        between: new Between('2021-06-01', '2099-12-31')
+        senders: ['9998'],
+        receivers: ['005', '006', '007'],
+        between: new Between('2021-06-01', '2021-06-01')
       })
       expect(response).be.true
     });

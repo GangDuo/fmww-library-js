@@ -80,7 +80,15 @@ module.exports = class MovementExport extends AbstractSinglePage {
     const multipleSelector = () => {
       return (id, xs) => document.getElementById(id).value = xs.join('\t')
     }
+    const setValue = () => {
+      return (el, v) => el.value = v
+    }
 
+    if(options.between) {
+      const { from, to } = options.between;
+      await page.$eval('#moving_date_from', setValue(), from)
+      await page.$eval('#moving_date_to', setValue(), to)
+    }
     await page.evaluate(multipleSelector(), 'destFrom:dest', senders)
     await page.evaluate(multipleSelector(), 'destTo:dest', receivers)
     await page.evaluate(Native.performClick(), ButtonSymbol.CSV)
