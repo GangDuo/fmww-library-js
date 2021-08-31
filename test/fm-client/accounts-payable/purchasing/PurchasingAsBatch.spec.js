@@ -14,4 +14,7 @@ describe('PurchasingAsBatch', function () {
   after(async function() {
     await c.quit()
   })
+
+  it('should import csv file.', function () {
+  });
 })
