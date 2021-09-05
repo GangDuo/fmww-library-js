@@ -15,6 +15,8 @@ describe('PurchasingAsBatch', function () {
     await c.quit()
   })
 
-  it('should import csv file.', function () {
+  it.only('should import csv file.', async function () {
+    const response = await c.create()
+		expect(response).be.true
   });
 })

@@ -16,4 +16,8 @@ module.exports = class PurchasingAsBatch extends AbstractSinglePage {
     await super.clickOnMenu(MENU_ITEM, CREATE_BUTTON)
     return true
   }
+
+  create(options) {
+    return true
+  }
 }
