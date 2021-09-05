@@ -21,7 +21,7 @@ describe('PurchasingAsBatch', function () {
     await unlinkAsync(filename);
   })
 
-  it.only('should import csv file.', async function () {
+  it('should import csv file.', async function () {
   });
 
   it('should fail to import csv file.', async function () {
