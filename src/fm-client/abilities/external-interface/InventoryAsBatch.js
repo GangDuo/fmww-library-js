@@ -28,14 +28,7 @@ module.exports = class InventoryAsBatch extends AbstractSinglePage {
     const filePath = options.filePath
     if(!fs.existsSync(filePath)) return false
 
-    const frame = await page.frames().find(f => f.name() === 'file:frame')
-    const inputUploadHandle = await frame.$('input[type=file]')
-    await inputUploadHandle.uploadFile(filePath)
-    await frame.$eval('form[id=form]', e => e.submit())
-    // アップロード完了まで待つ
-    const SELECTOR_FOR_FILE_SIZE = '#succ .fileSize'
-    await frame.waitForSelector(SELECTOR_FOR_FILE_SIZE)
-    const fileSize = await frame.$eval(SELECTOR_FOR_FILE_SIZE, e => e.textContent)
+    const fileSize = await super.uploadFile(filePath)
 
     // 登録開始
     await page.evaluate(Native.performClick(), ButtonSymbol.REGISTER)

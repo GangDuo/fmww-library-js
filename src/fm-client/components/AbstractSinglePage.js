@@ -80,6 +80,19 @@ module.exports = class AbstractSinglePage {
     await sleep(500)
   }
 
+  async uploadFile(filePath) {
+    const page = this.page
+    const frame = await page.frames().find(f => f.name() === 'file:frame')
+    const inputUploadHandle = await frame.$('input[type=file]')
+    await inputUploadHandle.uploadFile(filePath)
+    await frame.$eval('form[id=form]', e => e.submit())
+    // アップロード完了まで待つ
+    const SELECTOR_FOR_FILE_SIZE = '#succ .fileSize'
+    await frame.waitForSelector(SELECTOR_FOR_FILE_SIZE)
+    const fileSize = await frame.$eval(SELECTOR_FOR_FILE_SIZE, e => e.textContent)
+    return fileSize
+  }
+
   async decideMenuItem_(context) {
     const page = this.page
     const catergory = context.catergory
