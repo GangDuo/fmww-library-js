@@ -5,6 +5,7 @@ const writeFileAsync = promisify(fs.writeFile);
 const unlinkAsync = promisify(fs.unlink);
 
 describe('InventoryAsBatch', function () {
+  this.timeout(100000);
   const filename = 'FMWW棚卸.csv'
   const c = new FmClient()
 
