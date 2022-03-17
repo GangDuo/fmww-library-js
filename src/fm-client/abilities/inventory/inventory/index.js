@@ -38,6 +38,9 @@ module.exports = class Inventory extends AbstractSinglePage {
       await page.evaluate(Native.performClick(), ButtonSymbol.SEARCH)
       await super.waitUntilLoadingIsOver()
 
+      await page.evaluate(Native.performClick(), ButtonSymbol.XLSX)
+      await super.waitUntilLoadingIsOver()
+
       return Promise.resolve(true)
     } catch(e) {
       return {
