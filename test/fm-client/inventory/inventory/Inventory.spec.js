@@ -24,6 +24,7 @@ describe.only('inventory', function () {
   })
 
   it('search', async function () {
+    this.timeout(60000);
     const response = await c.search({
       storeCodes: ['99999', '9500'],
     })

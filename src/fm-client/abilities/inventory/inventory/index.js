@@ -22,11 +22,22 @@ module.exports = class Inventory extends AbstractSinglePage {
     return false
   }
 
-  async search() {
+  async search(options) {
     try {
       await super.clickOnMenu(MENU_ITEM, INDEX_BUTTON).catch(error => {
         throw error
       })
+
+      const page = super.page
+      await page.evaluate(storeCodes => {
+        Array.from(document.querySelectorAll("#dest\\:dest\\:SELECT span"))
+          .filter(x => storeCodes.includes(x.value))
+          .map(x => x.setAttribute("selected", "selected"))
+      }, options.storeCodes || [])
+
+      await page.evaluate(Native.performClick(), ButtonSymbol.SEARCH)
+      await super.waitUntilLoadingIsOver()
+
       return Promise.resolve(true)
     } catch(e) {
       return {
