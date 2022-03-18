@@ -3,6 +3,7 @@ const AbstractSinglePage = require('../../../components/AbstractSinglePage')
 const MenuItem = require('../../../components/MenuItem')
 const Native = require('../../../components/Native');
 const ButtonSymbol = require('../../../components/ButtonSymbol');
+const SelectorSymbol = require('../../../components/SelectorSymbol');
 const RequestHijacking = require('../../../components/RequestHijacking');
 const FileDownloader = require('../../../components/FileDownloader');
 
@@ -51,7 +52,7 @@ module.exports = class PurchaseHistory extends AbstractSinglePage {
         FileDownloader.request,
         options
       )
-      await page.click('.excelDLDiv input[name=smt]');
+      await page.click(SelectorSymbol.EXCEL_DOWNLOAD_LINK);
     } catch(e) {
       return {
         isSuccess: false,

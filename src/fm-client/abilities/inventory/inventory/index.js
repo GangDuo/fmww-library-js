@@ -3,6 +3,7 @@ const AbstractSinglePage = require('../../../components/AbstractSinglePage')
 const MenuItem = require('../../../components/MenuItem')
 const Native = require('../../../components/Native');
 const ButtonSymbol = require('../../../components/ButtonSymbol');
+const SelectorSymbol = require('../../../components/SelectorSymbol');
 const RequestHijacking = require('../../../components/RequestHijacking');
 const FileDownloader = require('../../../components/FileDownloader');
 
@@ -47,7 +48,7 @@ module.exports = class Inventory extends AbstractSinglePage {
         FileDownloader.request,
         options
       )
-      await page.click('.excelDLDiv input[name=smt]');
+      await page.click(SelectorSymbol.EXCEL_DOWNLOAD_LINK);
 
       return Promise.resolve(true)
     } catch(e) {
