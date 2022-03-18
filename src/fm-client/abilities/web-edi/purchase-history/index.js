@@ -8,18 +8,18 @@ const RequestHijacking = require('../../../components/RequestHijacking');
 const FileDownloader = require('../../../components/FileDownloader');
 
 const INDEX_BUTTON = 2
-const MENU_ITEM = new MenuItem(10, 1, 1)
+const MENU_ITEM = new MenuItem(15, 1, 4)
 
 /*
- * /在庫・棚卸:在庫/在庫照会/
+ * /WEB-EDI:WEB-EDI/仕入請求出力/
  */
-module.exports = class Inventory extends AbstractSinglePage {
+module.exports = class PurchaseHistory extends AbstractSinglePage {
   constructor(page) {
     super(page)
   }
 
   enable() {
-    debug.log('Inventory.enable')
+    debug.log('PurchaseHistory.enable')
     return false
   }
 
@@ -30,32 +30,36 @@ module.exports = class Inventory extends AbstractSinglePage {
       })
 
       const page = super.page
-      await page.evaluate(storeCodes => {
-        Array.from(document.querySelectorAll("#dest\\:dest\\:SELECT span"))
-          .filter(x => storeCodes.includes(x.value))
-          .map(x => x.setAttribute("selected", "selected"))
-      }, options.storeCodes || [])
+      await page.evaluate(span => {
+        document.getElementById('output').value = '1';
 
-      await page.evaluate(Native.performClick(), ButtonSymbol.SEARCH)
-      await super.waitUntilLoadingIsOver()
+        [
+          {id: 'bill_effective_date_start', value: span.begin},
+          {id: 'bill_effective_date_end', value: span.end}
+        ].forEach(x => {
+          if(x.value) {
+            document.getElementById(x.id).value = x.value;
+          }  
+        })
+      }, options.span || {})
 
       await page.evaluate(Native.performClick(), ButtonSymbol.XLSX)
       await super.waitUntilLoadingIsOver()
 
       // ファイルをダウンロード
       const rh = new RequestHijacking(page)
-      await rh.intercept('/JMODE_ASP/SlipList$',
+      await rh.intercept('/JMODE_ASP/faces/contents/X152_160_SUP_BILL_EXPORT/X152_SELECT.jsp$',
         FileDownloader.request,
         options
       )
       await page.click(SelectorSymbol.EXCEL_DOWNLOAD_LINK);
-
-      return Promise.resolve(true)
     } catch(e) {
       return {
         isSuccess: false,
         statusText: e.message//'原因不明のエラー',
       }
     }
+
+    return Promise.resolve(true)
   }
 }
