@@ -27,6 +27,7 @@ describe.only('inventory', function () {
     this.timeout(180000);
     const response = await c.search({
       storeCodes: ['99999', '9500'],
+      directoryToSaveFile: '.',
     })
     expect(response).be.true
   });  

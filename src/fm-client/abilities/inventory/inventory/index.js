@@ -7,6 +7,7 @@ const RequestHijacking = require('../../../components/RequestHijacking');
 
 const https = require("https");
 const fs = require('fs');
+const path = require('path');
 
 const INDEX_BUTTON = 2
 const MENU_ITEM = new MenuItem(10, 1, 1)
@@ -47,7 +48,7 @@ module.exports = class Inventory extends AbstractSinglePage {
       const rh = new RequestHijacking(page)
       await rh.intercept('/JMODE_ASP/SlipList$',
         Inventory.sendRequest_,
-        {}
+        options
       )
       await page.click('.excelDLDiv input[name=smt]');
 
@@ -77,9 +78,9 @@ module.exports = class Inventory extends AbstractSinglePage {
         }
         
         const machedArray = RegExp('filename=(.*)', 'g').exec(response.headers['content-disposition'])
-        const filename = machedArray[1]
+        const filepath = path.join(userData.directoryToSaveFile || '', machedArray[1])
 
-        const stream = fs.createWriteStream(filename, { encoding: null });
+        const stream = fs.createWriteStream(filepath, { encoding: null });
         response.on('data', (chunk) => stream.write(chunk));
         response.on('end', () => {
           stream.end();
