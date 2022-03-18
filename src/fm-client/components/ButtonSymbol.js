@@ -5,4 +5,5 @@ module.exports = class ButtonSymbol {
   static get REGISTER() { return 'register_button' }
   static get CSV() { return 'csv_button' }
   static get EXECUTE() { return 'execute_button' }
+  static get XLSX() { return 'excel_button' }
 }
