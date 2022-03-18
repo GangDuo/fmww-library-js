@@ -24,7 +24,12 @@ describe.only('purchase-history', function () {
   })
 
   it('download with Excel', async function () {
-    const response = await c.search()
+    const response = await c.search({
+      span: {
+        begin: '2022年03月01日',
+        end: '2022年03月01日'
+      }
+    })
     expect(response).be.true
   });  
 })
