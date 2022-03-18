@@ -8,7 +8,7 @@ const user = {
   FMWW_PASSWORD          : process.env.FMWW_PASSWORD
 }
 
-describe.only('inventory', function () {
+describe('inventory', function () {
   const c = new FmClient()
 
   before(async function() {
