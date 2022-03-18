@@ -3,6 +3,8 @@ const AbstractSinglePage = require('../../../components/AbstractSinglePage')
 const MenuItem = require('../../../components/MenuItem')
 const Native = require('../../../components/Native');
 const ButtonSymbol = require('../../../components/ButtonSymbol');
+const RequestHijacking = require('../../../components/RequestHijacking');
+const FileDownloader = require('../../../components/FileDownloader');
 
 const INDEX_BUTTON = 2
 const MENU_ITEM = new MenuItem(15, 1, 4)
@@ -42,6 +44,14 @@ module.exports = class PurchaseHistory extends AbstractSinglePage {
 
       await page.evaluate(Native.performClick(), ButtonSymbol.XLSX)
       await super.waitUntilLoadingIsOver()
+
+      // ファイルをダウンロード
+      const rh = new RequestHijacking(page)
+      await rh.intercept('/JMODE_ASP/faces/contents/X152_160_SUP_BILL_EXPORT/X152_SELECT.jsp$',
+        FileDownloader.request,
+        options
+      )
+      await page.click('.excelDLDiv input[name=smt]');
     } catch(e) {
       return {
         isSuccess: false,
