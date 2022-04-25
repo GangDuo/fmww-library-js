@@ -4,8 +4,7 @@ const MenuItem = require('../../../components/MenuItem')
 const Native = require('../../../components/Native');
 const ButtonSymbol = require('../../../components/ButtonSymbol');
 const SelectorSymbol = require('../../../components/SelectorSymbol');
-const RequestHijacking = require('../../../components/RequestHijacking');
-const FileDownloader = require('../../../components/FileDownloader');
+const HttpHookLoader = require('../../../components/HttpHookLoader');
 
 const INDEX_BUTTON = 2
 const MENU_ITEM = new MenuItem(10, 1, 1)
@@ -43,11 +42,8 @@ module.exports = class Inventory extends AbstractSinglePage {
       await super.waitUntilLoadingIsOver()
 
       // ファイルをダウンロード
-      const rh = new RequestHijacking(page)
-      await rh.intercept('/JMODE_ASP/SlipList$',
-        FileDownloader.request,
-        options
-      )
+      const client = new HttpHookLoader(page, '/JMODE_ASP/SlipList$', options)
+      await client.enable()
       await page.click(SelectorSymbol.EXCEL_DOWNLOAD_LINK);
 
       return Promise.resolve(true)

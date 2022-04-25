@@ -4,8 +4,7 @@ const MenuItem = require('../../../components/MenuItem')
 const Native = require('../../../components/Native');
 const ButtonSymbol = require('../../../components/ButtonSymbol');
 const SelectorSymbol = require('../../../components/SelectorSymbol');
-const RequestHijacking = require('../../../components/RequestHijacking');
-const FileDownloader = require('../../../components/FileDownloader');
+const HttpHookLoader = require('../../../components/HttpHookLoader');
 
 const INDEX_BUTTON = 2
 const MENU_ITEM = new MenuItem(15, 1, 4)
@@ -47,11 +46,12 @@ module.exports = class PurchaseHistory extends AbstractSinglePage {
       await super.waitUntilLoadingIsOver()
 
       // ファイルをダウンロード
-      const rh = new RequestHijacking(page)
-      await rh.intercept('/JMODE_ASP/faces/contents/X152_160_SUP_BILL_EXPORT/X152_SELECT.jsp$',
-        FileDownloader.request,
-        options
-      )
+      const client = new HttpHookLoader(
+        page,
+        '/JMODE_ASP/faces/contents/X152_160_SUP_BILL_EXPORT/X152_SELECT.jsp$',
+        options)
+      await client.enable()
+
       await page.click(SelectorSymbol.EXCEL_DOWNLOAD_LINK);
     } catch(e) {
       return {
