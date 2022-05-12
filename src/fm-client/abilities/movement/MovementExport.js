@@ -1,10 +1,10 @@
-const fmww = require('../../core/fmwwService')
 const AbstractSinglePage = require('../../components/AbstractSinglePage')
 const debug = require('../../../diagnostics/debug')
 const MenuItem = require('../../components/MenuItem')
 const Native = require('../../components/Native');
 const ButtonSymbol = require('../../components/ButtonSymbol');
-const {writeFileAsync} = require('../../components/Helpers');
+const SelectorSymbol = require('../../components/SelectorSymbol');
+const HttpHookLoader = require('../../components/HttpHookLoader');
 
 const SEARCH_BUTTON = 2
 const MENU_ITEM = new MenuItem(11, 1, 3)
@@ -69,7 +69,6 @@ module.exports = class MovementExport extends AbstractSinglePage {
     debug.log('MovementExport.export')
     await super.clickOnMenu(MENU_ITEM, SEARCH_BUTTON)
     const result = await this.exportMovement_(options).catch(e => {console.log(e);return false;})
-    await super.backToMainMenu()
     return result
   }
 
@@ -95,12 +94,13 @@ module.exports = class MovementExport extends AbstractSinglePage {
     await super.waitUntilLoadingIsOver()
   
     // ダウンロード処理
-    const uint8 = await fmww.download(page)
-    const xs = Object.keys(uint8).map(key => uint8[key])
-    const content = Buffer.from(xs)
-    // encodingをnullにして、生データのまま書き込む
-    await writeFileAsync(options.filename, content, {encoding: null});
-    await super.closeDownloadBox()
+    const client = new HttpHookLoader(
+      page,
+      '/JMODE_ASP/faces/contents/F065_MOVE_EXPORT/F065_SELECT.jsp$',
+      options)
+    await client.enable()
+    await page.click(SelectorSymbol.EXCEL_DOWNLOAD_LINK);
+
     return Promise.resolve(true)
   }
 }
