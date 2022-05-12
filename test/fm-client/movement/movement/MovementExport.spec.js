@@ -62,7 +62,8 @@ describe('FmClient', function () {
 
     it('export with range', async function () {
       const response = await c.export({
-        filename: 'movement2.csv',
+        directoryToSaveFile: '.',
+        filename: 'movement2.csv',/* TODO: 機能していない */
         senders: ['9998'],
         receivers: ['005', '006', '007'],
         between: new Between('2021-06-01', '2021-06-01')
