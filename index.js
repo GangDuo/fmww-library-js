@@ -9,6 +9,7 @@ const InventoryAsBatch = require('./src/fm-client/abilities/external-interface/I
 const Between = require('./src/fm-client/components/Between')
 const GoodsImage = require('./src/fm-client/abilities/master/goods-image/')
 const PurchasingAsBatch = require('./src/fm-client/abilities/accounts-payable/purchasing/PurchasingAsBatch')
+const PurchaseHistory = require('./src/fm-client/abilities/web-edi/purchase-history/');
 
 module.exports = {
   FmClient,
@@ -21,5 +22,6 @@ module.exports = {
   InventoryAsBatch,
   Between,
   GoodsImage,
-  PurchasingAsBatch
+  PurchasingAsBatch,
+  PurchaseHistory,
 };
